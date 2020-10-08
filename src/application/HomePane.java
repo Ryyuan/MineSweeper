@@ -20,7 +20,7 @@ public class HomePane extends BorderPane {
 	ImageView[] homeView;
 	ToggleGroup musicGroup,timerGroup;
 	RadioButton[] musicSwitches, timerSwitches;
-	int[] switchStatus;	//indicate the 2 switches status,0-off,1-0n
+	String[] switchStatus;	//indicate the 2 switches status,0-music,1-countdown timer
 	Button newGameBtn;
 	
 	public HomePane() {
@@ -43,7 +43,7 @@ public class HomePane extends BorderPane {
 		newGameBtn = new Button("Go!", homeView[3]);
 		
 		newGameBtn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-		switchStatus = new int[2];
+		switchStatus = new String[2];
 		switchesInit();
 		layoutInit();
 	}
@@ -65,12 +65,21 @@ public class HomePane extends BorderPane {
 		musicBox.getChildren().add(musicSwitch);
 		timerBox.getChildren().add(timerSwitch);
 		musicSwitches[0] = new RadioButton("On");
-		musicSwitches[1] = new RadioButton("Off");
+		musicSwitches[0].setUserData("On");
 		musicSwitches[0].setToggleGroup(musicGroup);
+		musicSwitches[0].setSelected(true);
+		
+		musicSwitches[1] = new RadioButton("Off");
+		musicSwitches[1].setUserData("Off");
 		musicSwitches[1].setToggleGroup(musicGroup);
+		
 		timerSwitches[0] = new RadioButton("On");
-		timerSwitches[1] = new RadioButton("Off");
+		timerSwitches[0].setUserData("On");
 		timerSwitches[0].setToggleGroup(timerGroup);
+		timerSwitches[0].setSelected(true);
+		
+		timerSwitches[1] = new RadioButton("Off");
+		timerSwitches[1].setUserData("Off");
 		timerSwitches[1].setToggleGroup(timerGroup);
 		for(int i=0;i<2;i++) {
 			musicBox.getChildren().add(musicSwitches[i]);

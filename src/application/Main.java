@@ -23,6 +23,7 @@ public class Main extends Application {
 	int mineNumbers; // indicate the mine numbers
 	int labeledNumbers; //indicate the play's correctly label how many mines
 	int testTimes; //indicate the testing times left
+	String musicStatus,timerStatus;	//indicate the music/timer on/off status
 	Scene homeScene, settingScene, gameScene;		//2 scenes to shift between each other 
 	SettingPane settingPane;	//settingPane is the page for user to set
     GamePane gamePane;			//gamePane is where game runs
@@ -49,6 +50,9 @@ public class Main extends Application {
 	private void initHListener(Stage stage) {
 		// TODO Auto-generated method stub
 		homePane.newGameBtn.setOnMouseClicked(e->{
+			musicStatus = (String) homePane.musicGroup.getSelectedToggle().getUserData();
+			timerStatus = (String) homePane.timerGroup.getSelectedToggle().getUserData();
+			System.out.println("music:" + musicStatus+ " count down timer:"+ musicStatus);
 			stage.setScene(settingScene);
 		});
 	}
@@ -61,8 +65,8 @@ public class Main extends Application {
         });
         
         gamePane.settingBtn.setOnMouseClicked(e->{
-        	stage.setScene(settingScene);
-        	gamePane.bgMusicStop();
+        	stage.setScene(homeScene);
+        	gamePane.bgMusicStop(musicStatus);
         });
         
         //btmBar testRec's listener (drag and drop to test a cell)
@@ -172,7 +176,7 @@ public class Main extends Application {
 							gamePane.statusChange(1);
 							gamePane.minePane.lostClear();
 							gamePane.timeStop();
-							gamePane.lostMusicPlayOnce();	//play lost music
+							gamePane.lostMusicPlayOnce(musicStatus);	//play lost music
 						}
 						
 					}
@@ -197,7 +201,7 @@ public class Main extends Application {
 						btnPick.labelStatus = -btnPick.labelStatus;
 						checkWin();  //check if the player labels all the mine btns
 					}
-					gamePane.btnMusicPlayOnce();
+					gamePane.btnMusicPlayOnce(musicStatus);
 				});	
         	}
         }
@@ -208,7 +212,7 @@ public class Main extends Application {
 		if(labeledNumbers == mineNumbers && Integer.valueOf(gamePane.minesShow.getText()) == 0) {
 			gamePane.statusChange(2);   //change the label show
 			gamePane.timeStop();    //freeze time
-			gamePane.winMusicPlayOnce();	//play win music 
+			gamePane.winMusicPlayOnce(musicStatus);	//play win music 
 			gamePane.minePane.winClear();
 		}
 	}
@@ -249,7 +253,7 @@ public class Main extends Application {
 		gamePane.minesShow.setText(Integer.toString(mineNumbers));  //change mine's number's status
 		gamePane.chancesShow.setText(String.valueOf(testTimes));
 		gamePane.timeStart();		//change time status
-		gamePane.bgMusicPlay();		//play background music
+		gamePane.bgMusicPlay(musicStatus);		//play background music
     	gamePane.getChildren().remove(gamePane.minePane);			//remove an old mine's pane and add a new one
     	gamePane.minePane = new MinePane(rowX, colY, mineNumbers);
     	gamePane.setCenter(gamePane.minePane);

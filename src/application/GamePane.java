@@ -155,42 +155,53 @@ public class GamePane extends BorderPane {
 		statusShow.setText(statusLabel[i]);
 	}
 	
-	//play the bg music
-	public void bgMusicPlay() {
+	//play the bg music only if musicStatus == On
+	public void bgMusicPlay(String musicStatus) {
 		//bg music player
-		bgMedia = new Media(new File("music/backgroud.mp3").toURI().toString());
-		bgMediaPlayer = new MediaPlayer(bgMedia);
-		bgMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); //indefinitely play bg music
-		bgMediaPlayer.play();
+		if(musicStatus.equals("On")) {
+			bgMedia = new Media(new File("music/backgroud.mp3").toURI().toString());
+			bgMediaPlayer = new MediaPlayer(bgMedia);
+			bgMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); //indefinitely play bg music
+			bgMediaPlayer.play();
+		}
+
 	}
 	
 	//stop the bg music
-	public void bgMusicStop() {
-		bgMediaPlayer.stop();
+	public void bgMusicStop(String musicStatus) {
+		if(musicStatus.equals("On")) {
+			bgMediaPlayer.stop();
+		}
 	}
 	
 	//btn music effect
-	public void btnMusicPlayOnce() {
+	public void btnMusicPlayOnce(String musicStatus) {
 		//btn music effect player
-		btnMedia = new Media(new File("music/button.mp3").toURI().toString());
-		btnMediaPlayer = new MediaPlayer(btnMedia);
-		btnMediaPlayer.setVolume(0.5);
-		btnMediaPlayer.play();
+		if(musicStatus.equals("On")) {
+			btnMedia = new Media(new File("music/button.mp3").toURI().toString());
+			btnMediaPlayer = new MediaPlayer(btnMedia);
+			btnMediaPlayer.setVolume(0.5);
+			btnMediaPlayer.play();
+		}
 	}
 	
 	//win music effect
-	public void winMusicPlayOnce() {
-		bgMediaPlayer.stop();
-		bgMedia = new Media(new File("music/gamewin.mp3").toURI().toString());
-		bgMediaPlayer = new MediaPlayer(bgMedia);
-		bgMediaPlayer.play();
+	public void winMusicPlayOnce(String musicStatus) {
+		if(musicStatus.equals("On")) {
+			bgMediaPlayer.stop();
+			bgMedia = new Media(new File("music/gamewin.mp3").toURI().toString());
+			bgMediaPlayer = new MediaPlayer(bgMedia);
+			bgMediaPlayer.play();
+		}
 	}
 	
 	//lost music effect
-	public void lostMusicPlayOnce() {
-		bgMediaPlayer.stop();
-		bgMedia = new Media(new File("music/gameover.mp3").toURI().toString());
-		bgMediaPlayer = new MediaPlayer(bgMedia);
-		bgMediaPlayer.play();
+	public void lostMusicPlayOnce(String musicStatus) {
+		if(musicStatus.equals("On")) {
+			bgMediaPlayer.stop();
+			bgMedia = new Media(new File("music/gameover.mp3").toURI().toString());
+			bgMediaPlayer = new MediaPlayer(bgMedia);
+			bgMediaPlayer.play();
+		}
 	}
 }

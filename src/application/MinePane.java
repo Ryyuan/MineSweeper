@@ -111,7 +111,7 @@ public class MinePane extends GridPane{
 	}
 	
 	
-	//stack overflow error, open a 0 button's neighbor buttons
+	//open a 0 button's neighbor buttons,but before that make sure they'e not opened before
 	public void neighborClear(int x, int y) {
 		for(int i=0;i<8;i++) {
 			if(x+route[i][0]>=0 && x+route[i][0]<rows && y+route[i][1]>=0 && y+route[i][1]<cols && btnGraph[x + route[i][0]][y + route[i][1]].mineInfo<9 && btnGraph[x + route[i][0]][y + route[i][1]].getText().equals("  ") ) {
