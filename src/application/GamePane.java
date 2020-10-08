@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,6 +27,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -41,7 +44,8 @@ public class GamePane extends BorderPane {
 	ImageView viewRestart,viewSettings;
 	Image[] topBarImg,scanImg;
 	ImageView[] topBarView,scanView;
-	Thread timerThread;
+	Media bgMedia,btnMedia;
+	MediaPlayer bgMediaPlayer, btnMediaPlayer;
 	Timer mTimer;
 	TimerTask mTimerTsk;
 	long startTime;
@@ -71,8 +75,8 @@ public class GamePane extends BorderPane {
 		chancesShow =new Label();
 		statusShow = new Label();
 		timeShow = new Label();
-
-
+		
+		
 		// whole layout
 		this.setTop(topBar);
 		this.setCenter(minePane);
@@ -101,20 +105,20 @@ public class GamePane extends BorderPane {
 	private void ImageInit() {
 		// TODO Auto-generated method stub
 		for(int i=0; i<4; i++) {
-			topBarImg[i] = new Image("file:img/topBarIcon"+String.valueOf(i)+".png");
+			topBarImg[i] = new Image("file:img/topBarImg/topBarIcon"+String.valueOf(i)+".png");
 			topBarView[i] = new ImageView(topBarImg[i]);
 			topBarView[i].setFitWidth(30);
 			topBarView[i].setPreserveRatio(true);
-			scanImg[i] = new Image("file:img/scanIcon"+String.valueOf(i)+".png");
+			scanImg[i] = new Image("file:img/scanImg/scanIcon"+String.valueOf(i)+".png");
 			scanView[i] = new ImageView(scanImg[i]);
 			scanView[i].setFitWidth(50);
 			scanView[i].setPreserveRatio(true);
 		}
-		imgRestart = new Image("file:img/Restart.png");
+		imgRestart = new Image("file:img/btmBarImg/Restart.png");
 		viewRestart = new ImageView(imgRestart);
 		viewRestart.setFitWidth(30);
 		viewRestart.setPreserveRatio(true);
-		imgSettings = new Image("file:img/Settings.png");
+		imgSettings = new Image("file:img/btmBarImg/Settings.png");
 		viewSettings = new ImageView(imgSettings);
 		viewSettings.setFitWidth(30);
 		viewSettings.setPreserveRatio(true);
@@ -149,5 +153,44 @@ public class GamePane extends BorderPane {
 	//refresh status 
 	public void statusChange(int i) {
 		statusShow.setText(statusLabel[i]);
+	}
+	
+	//play the bg music
+	public void bgMusicPlay() {
+		//bg music player
+		bgMedia = new Media(new File("music/backgroud.mp3").toURI().toString());
+		bgMediaPlayer = new MediaPlayer(bgMedia);
+		bgMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); //indefinitely play bg music
+		bgMediaPlayer.play();
+	}
+	
+	//stop the bg music
+	public void bgMusicStop() {
+		bgMediaPlayer.stop();
+	}
+	
+	//btn music effect
+	public void btnMusicPlayOnce() {
+		//btn music effect player
+		btnMedia = new Media(new File("music/button.mp3").toURI().toString());
+		btnMediaPlayer = new MediaPlayer(btnMedia);
+		btnMediaPlayer.setVolume(0.5);
+		btnMediaPlayer.play();
+	}
+	
+	//win music effect
+	public void winMusicPlayOnce() {
+		bgMediaPlayer.stop();
+		bgMedia = new Media(new File("music/gamewin.mp3").toURI().toString());
+		bgMediaPlayer = new MediaPlayer(bgMedia);
+		bgMediaPlayer.play();
+	}
+	
+	//lost music effect
+	public void lostMusicPlayOnce() {
+		bgMediaPlayer.stop();
+		bgMedia = new Media(new File("music/gameover.mp3").toURI().toString());
+		bgMediaPlayer = new MediaPlayer(bgMedia);
+		bgMediaPlayer.play();
 	}
 }

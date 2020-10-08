@@ -25,6 +25,8 @@ class CellBtn extends Button{
 	String nowStyle;	//what's the style of the button
 	String clickedStyle = "-fx-background-color:#999999;";		//if clikced set the btn's bg to dark grey
 	String labeledStyle = "-fx-background-color:#33FFFF;";		//if labeled set the btn's bg to blue
+	String lostMineStyle = "-fx-background-color:#ff0000;";		//if clikced the mine, the mince cell become red
+	String winMineStyle = "-fx-background-color:#00ff00;";		//if clikced the mine, the mince cell become green
 	String noStyle = "";	//defualt bg color
 	public CellBtn(String init) {
 		labelStatus = 1;
@@ -114,6 +116,7 @@ public class MinePane extends GridPane{
 		for(int i=0;i<8;i++) {
 			if(x+route[i][0]>=0 && x+route[i][0]<rows && y+route[i][1]>=0 && y+route[i][1]<cols && btnGraph[x + route[i][0]][y + route[i][1]].mineInfo<9 && btnGraph[x + route[i][0]][y + route[i][1]].getText().equals("  ") ) {
 				btnGraph[x + route[i][0]][y + route[i][1]].setText(String.valueOf(btnGraph[x + route[i][0]][y + route[i][1]].mineInfo));
+				btnGraph[x + route[i][0]][y + route[i][1]].nowStyle = btnGraph[x + route[i][0]][y + route[i][1]].clickedStyle; //change their now style
 				btnGraph[x + route[i][0]][y + route[i][1]].setStyle(btnGraph[x + route[i][0]][y + route[i][1]].clickedStyle);
 				if(btnGraph[x + route[i][0]][y + route[i][1]].mineInfo == 0) {
 					neighborClear(x + route[i][0], y + route[i][1]);
@@ -130,7 +133,7 @@ public class MinePane extends GridPane{
 			for(int j=0;j<this.cols;j++) {
 				if(btnGraph[i][j].mineInfo>8) {
 					this.btnGraph[i][j].setText("💣");
-					this.btnGraph[i][j].setStyle("-fx-background-color: #ff0000;");  //become red
+					this.btnGraph[i][j].setStyle(btnGraph[i][j].lostMineStyle);  //become red
 				}else {
 					this.btnGraph[i][j].setText(Integer.toString(this.btnGraph[i][j].mineInfo));
 				}
@@ -146,7 +149,7 @@ public class MinePane extends GridPane{
 			for(int j=0;j<this.cols;j++) {
 				if(btnGraph[i][j].mineInfo>8) {
 					this.btnGraph[i][j].setText("🚩");
-					this.btnGraph[i][j].setStyle("-fx-background-color: #00ff00;");  //become green 
+					this.btnGraph[i][j].setStyle(btnGraph[i][j].winMineStyle);  //become green 
 				}else {
 					this.btnGraph[i][j].setText(Integer.toString(this.btnGraph[i][j].mineInfo));
 				}

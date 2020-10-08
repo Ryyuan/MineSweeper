@@ -23,26 +23,36 @@ public class Main extends Application {
 	int mineNumbers; // indicate the mine numbers
 	int labeledNumbers; //indicate the play's correctly label how many mines
 	int testTimes; //indicate the testing times left
-	Scene settingScene, gameScene;		//2 scenes to shift between each other 
+	Scene homeScene, settingScene, gameScene;		//2 scenes to shift between each other 
 	SettingPane settingPane;	//settingPane is the page for user to set
     GamePane gamePane;			//gamePane is where game runs
+    HomePane homePane;			//homePane is the home page
     
 	@Override
 	public void start(Stage primaryStage) {
 		
+		homePane = new HomePane();
 		settingPane = new SettingPane();
 		gamePane = new GamePane(rowX, colY, mineNumbers);
         gameScene = new Scene(gamePane);
 		settingScene = new Scene(settingPane);
-		
+		homeScene = new Scene(homePane);
+		initHListener(primaryStage);	//initialize homePane's listener
 		initSListener(primaryStage); 	//initialize settingPane's listener
 		
 		//game window start
-        primaryStage.setScene(settingScene);
+        primaryStage.setScene(homeScene);
         primaryStage.setTitle("MineSweeper-V2-Yuan");
         primaryStage.show();
 	}
 	
+	private void initHListener(Stage stage) {
+		// TODO Auto-generated method stub
+		homePane.newGameBtn.setOnMouseClicked(e->{
+			stage.setScene(settingScene);
+		});
+	}
+
 	private void initGlistener(Stage stage) {
 		// btmBar button's click listener
         gamePane.restartBtn.setOnMouseClicked(e->{
@@ -52,6 +62,7 @@ public class Main extends Application {
         
         gamePane.settingBtn.setOnMouseClicked(e->{
         	stage.setScene(settingScene);
+        	gamePane.bgMusicStop();
         });
         
         //btmBar testRec's listener (drag and drop to test a cell)
@@ -135,7 +146,7 @@ public class Main extends Application {
 				//mouse hover event
 				btnPick.setOnMouseEntered(e->{
 					for(CellBtn neighborBtn : neighborBtnList) {
-						neighborBtn.nowStyle = neighborBtn.getStyle();
+						neighborBtn.nowStyle = neighborBtn.getStyle();	//save their original style
 						String plus = neighborBtn.getStyle() + focus;
 						neighborBtn.setStyle(plus);
 					}
@@ -152,6 +163,7 @@ public class Main extends Application {
 						if(btnPick.mineInfo < 9) {
 							btnPick.setText(String.valueOf(btnPick.mineInfo));
 							btnPick.setStyle(btnPick.clickedStyle);
+							btnPick.nowStyle = btnPick.clickedStyle;
 							if(btnPick.mineInfo == 0) {
 								gamePane.minePane.neighborClear(pickX,pickY);
 							}
@@ -160,12 +172,14 @@ public class Main extends Application {
 							gamePane.statusChange(1);
 							gamePane.minePane.lostClear();
 							gamePane.timeStop();
+							gamePane.lostMusicPlayOnce();	//play lost music
 						}
 						
 					}
 					else if(e.getButton() == MouseButton.SECONDARY) {
 						if(btnPick.labelStatus == 1) {
 							btnPick.setStyle(btnPick.labeledStyle);
+							btnPick.nowStyle = btnPick.labeledStyle;
 							btnPick.setText("🚩");
 							gamePane.mineShowChange(-1);
 							if(btnPick.mineInfo > 8) {
@@ -173,6 +187,7 @@ public class Main extends Application {
 							}
 						}else {
 							btnPick.setStyle(btnPick.noStyle);
+							btnPick.nowStyle = btnPick.noStyle;
 							btnPick.setText("  ");
 							gamePane.mineShowChange(1);
 							if(btnPick.mineInfo > 8) {
@@ -182,6 +197,7 @@ public class Main extends Application {
 						btnPick.labelStatus = -btnPick.labelStatus;
 						checkWin();  //check if the player labels all the mine btns
 					}
+					gamePane.btnMusicPlayOnce();
 				});	
         	}
         }
@@ -192,6 +208,7 @@ public class Main extends Application {
 		if(labeledNumbers == mineNumbers && Integer.valueOf(gamePane.minesShow.getText()) == 0) {
 			gamePane.statusChange(2);   //change the label show
 			gamePane.timeStop();    //freeze time
+			gamePane.winMusicPlayOnce();	//play win music 
 			gamePane.minePane.winClear();
 		}
 	}
@@ -232,6 +249,7 @@ public class Main extends Application {
 		gamePane.minesShow.setText(Integer.toString(mineNumbers));  //change mine's number's status
 		gamePane.chancesShow.setText(String.valueOf(testTimes));
 		gamePane.timeStart();		//change time status
+		gamePane.bgMusicPlay();		//play background music
     	gamePane.getChildren().remove(gamePane.minePane);			//remove an old mine's pane and add a new one
     	gamePane.minePane = new MinePane(rowX, colY, mineNumbers);
     	gamePane.setCenter(gamePane.minePane);
