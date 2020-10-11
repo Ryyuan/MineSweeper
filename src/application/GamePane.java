@@ -125,16 +125,35 @@ public class GamePane extends BorderPane {
 	}
 
 	//refresh time
-	public void timeStart() {
-		startTime = System.currentTimeMillis();
-		mTimer = new Timer();
-	    mTimer.scheduleAtFixedRate(new TimerTask() {
-	        public void run() {
-	        		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
-	                Platform.runLater(() -> timeShow.setText(simpleDateFormat.format(System.currentTimeMillis()-startTime)));
-	                //System.out.println(simpleDateFormat.format(System.currentTimeMillis()-startTime));
-	        }
-	    }, 0,1000);
+	public void timeStart(String timerStatus, long timeCountDown) {
+		//if time starts form 0, which means timer is off
+		if(timerStatus == "Off") {
+			startTime = System.currentTimeMillis();
+			mTimer = new Timer();
+		    mTimer.scheduleAtFixedRate(new TimerTask() {
+		        public void run() {
+		        		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+		                Platform.runLater(() -> timeShow.setText(simpleDateFormat.format(System.currentTimeMillis()-startTime)));
+		                System.out.println(simpleDateFormat.format(System.currentTimeMillis()-startTime));
+		        }
+		    }, 0,1000);
+		}else {
+			startTime = timeCountDown;
+			mTimer = new Timer();
+		    mTimer.scheduleAtFixedRate(new TimerTask() {
+		        public void run() {
+		        	long timeNow = startTime--;
+	        		if(timeNow < 0) {
+	        			timeStop();
+	        		}else {
+	        			long timeMin = timeNow/60;
+	        			long timeSec = timeNow%60;
+	        			Platform.runLater(() -> timeShow.setText(String.valueOf(timeMin)+":"+String.valueOf(timeSec)));
+	        		}
+		        }
+		    }, 0,1000);
+		}
+		
 	}
 	
 	//freeze time

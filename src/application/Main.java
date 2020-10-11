@@ -24,6 +24,7 @@ public class Main extends Application {
 	int labeledNumbers; //indicate the play's correctly label how many mines
 	int testTimes; //indicate the testing times left
 	String musicStatus,timerStatus;	//indicate the music/timer on/off status
+	long timeCountDown;	//indicate how much time to count down
 	Scene homeScene, settingScene, gameScene;		//2 scenes to shift between each other 
 	SettingPane settingPane;	//settingPane is the page for user to set
     GamePane gamePane;			//gamePane is where game runs
@@ -52,7 +53,7 @@ public class Main extends Application {
 		homePane.newGameBtn.setOnMouseClicked(e->{
 			musicStatus = (String) homePane.musicGroup.getSelectedToggle().getUserData();
 			timerStatus = (String) homePane.timerGroup.getSelectedToggle().getUserData();
-			System.out.println("music:" + musicStatus+ " count down timer:"+ musicStatus);
+			System.out.println("music:" + musicStatus+ " countdown timer:"+ timerStatus);
 			stage.setScene(settingScene);
 		});
 	}
@@ -65,8 +66,9 @@ public class Main extends Application {
         });
         
         gamePane.settingBtn.setOnMouseClicked(e->{
-        	stage.setScene(homeScene);
+        	gamePane.timeStop();
         	gamePane.bgMusicStop(musicStatus);
+        	stage.setScene(homeScene);
         });
         
         //btmBar testRec's listener (drag and drop to test a cell)
@@ -220,18 +222,23 @@ public class Main extends Application {
 	private void initSListener(Stage stage) {
 		
 		settingPane.easyBtn.setOnMouseClicked(e->{
-        	StartGame(8,8,10,stage);
+			timeCountDown = 600;
+			StartGame(8,8,10,stage);
         	initGlistener(stage);
+        	
         });
         settingPane.mediumBtn.setOnMouseClicked(e->{
+        	timeCountDown = 1200;
         	StartGame(16,16,40,stage);
         	initGlistener(stage);
         });
         settingPane.hardBtn.setOnMouseClicked(e->{
+        	timeCountDown = 2400;
         	StartGame(20,30,90,stage);
         	initGlistener(stage);
         });
         settingPane.customBtn.setOnMouseClicked(e->{
+        	timeCountDown = 3600;
         	StartGame(
         			Integer.parseInt(settingPane.rowInput.getText()),
         			Integer.parseInt(settingPane.colInput.getText()),
@@ -252,13 +259,14 @@ public class Main extends Application {
     	gamePane.statusChange(0);	//change game status
 		gamePane.minesShow.setText(Integer.toString(mineNumbers));  //change mine's number's status
 		gamePane.chancesShow.setText(String.valueOf(testTimes));
-		gamePane.timeStart();		//change time status
+		gamePane.timeStart(timerStatus, timeCountDown);		//change time status
 		gamePane.bgMusicPlay(musicStatus);		//play background music
     	gamePane.getChildren().remove(gamePane.minePane);			//remove an old mine's pane and add a new one
     	gamePane.minePane = new MinePane(rowX, colY, mineNumbers);
     	gamePane.setCenter(gamePane.minePane);
     	nowStage.setScene(gameScene);
     	System.out.println("game start" + " row:"+ rowX+" col:"+ colY+" mines:"+ mineNumbers);
+    	System.out.println("musicStatus:"+ musicStatus+" timerStatus:"+ timerStatus + "timeCountDown" + timeCountDown);
 	}
 
 	public static void main(String[] args) {

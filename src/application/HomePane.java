@@ -28,9 +28,9 @@ public class HomePane extends BorderPane {
 		homeView = new ImageView[4];
 		homeImgInit();
 		
-		gameTitle = new Label();
+		gameTitle = new Label("MineSweeper by Renyi");
 		gameTitle.setGraphic(homeView[0]);
-		//gameTitle.setFont(Font.font("Arial",20));
+		gameTitle.setFont(Font.font("Arial",20));
 		musicSwitch = new Label("Music effect          ", homeView[1]);
 		timerSwitch = new Label("CountDown mode", homeView[2]);
 		switchBox = new VBox();
